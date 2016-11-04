@@ -1,0 +1,24 @@
+SRCS = $(wildcard *.c)
+CC = gcc
+
+#TIMERDIR is the directory containing the files for timers
+TIMERDIR = /home/zhi/tools/rose/buildrose/tutorial/loopRestructuring/loop_extracting/tests/loop_collections/common
+
+CFLAGS = -O3 -std=c99 -I ../
+LDFLAGS = -lcrypto -lssl
+
+TIMEROBJS = $(TIMERDIR)/c_randdp.o $(TIMERDIR)/c_timers.o $(TIMERDIR)/c_wtime.o
+
+#SRC = $(wildcard *.c)
+
+all: timers $(SRCS:.c=)
+
+timers:
+	cd $(TIMERDIR);	$(CC) -O3 -c c_randdp.c; $(CC) -O3 -c c_timers.c; $(CC) -O3 -c wtime.c -o c_wtime.o
+
+.c:
+	$(CC) $(CFLAGS) $< $(TIMEROBJS) -o $@ $(LDFLAGS)
+
+clean:
+	rm -f *.o; find . -perm /111 -type f -delete 
+

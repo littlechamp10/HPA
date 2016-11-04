@@ -1,0 +1,44 @@
+SRCS = $(wildcard *.c) 
+
+LOOPCOLLECTIONDIR = /home/zhi/benchmarks/loop_collections
+HEADERFILEDIR = ../input
+
+TIMERDIR = $(LOOPCOLLECTIONDIR)/common
+DUMMYDIR = $(LOOPCOLLECTIONDIR)/common
+
+DUMMYSRC = $(DUMMYDIR)/dummy.c
+DUMMYOBJ = $(DUMMYSRC:.c=.o)
+
+STATICLIB = isolatedLoopUtility.a
+
+CFLAGS = -O3 -g -std=c99 -I$(TIMERDIR) -I$(HEADERFILEDIR) 
+LDFLAGS = -lcrypto -lssl -lm
+
+ifeq ($(CC), gcc)
+    VECFLAGS = -ftree-vectorize 
+    NOVECFLAGS = -fno-tree-vectorize 
+else ifeq ($(CC), icc)
+    VECFLAGS = -xHost -vec-threshold100 -vec
+    NOVECFLAGS = -no-vec
+else ifeq ($(CC), clang)
+    VECFLAGS = -fvectorize -fslp-vectorize -fslp-vectorize-aggressive
+    NOVECFLAGS = -fno-vectorize -fno-slp-vectorize
+endif
+
+all:vec
+
+novec: $(DUMMYOBJ) $(patsubst %_main.c,%.novec,$(SRCS))
+
+vec: $(DUMMYOBJ) $(patsubst %_main.c,%.vec,$(SRCS))
+
+#all: $(SRCS:.c=)
+
+%.novec: %_main.c %_loop.c
+	$(CC) $(CFLAGS) $(NOVECFLAGS)  $^ $(DUMMYOBJ) $(STATICLIB) -o $@ $(LDFLAGS)
+
+%.vec: %_main.c %_loop.c
+	$(CC) $(CFLAGS) $(VECFLAGS)  $^ $(DUMMYOBJ) $(STATICLIB) -o $@ $(LDFLAGS)
+
+clean:
+	rm -f *.o *.novec *.vec
+

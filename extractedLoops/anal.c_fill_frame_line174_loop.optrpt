@@ -1,0 +1,38 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+Intel(R) C Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.0.102 Build 20160720
+
+Compiler options: -I/Users/siddharthgupta/Desktop/UCI/Classes@UCI/2.1-Fall_2016/HPA/Project/common -I../input -lcrypto -lssl -lm -O3 -g -std=c99 -xHost -vec-threshold100 -vec -qopt-report-phase=vec -qopt-report=5 -o anal.c_fill_frame_line174.vec
+
+Begin optimization report for: loop()
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at anal.c_fill_frame_line174_loop.c(70,5)
+<Peeled loop for vectorization>
+LOOP END
+
+LOOP BEGIN at anal.c_fill_frame_line174_loop.c(70,5)
+   remark #15389: vectorization support: reference inbufptr->values[i] has unaligned access   [ anal.c_fill_frame_line174_loop.c(72,9) ]
+   remark #15389: vectorization support: reference sptr->values[i] has unaligned access   [ anal.c_fill_frame_line174_loop.c(72,33) ]
+   remark #15381: vectorization support: unaligned access used inside loop body
+   remark #15305: vectorization support: vector length 8
+   remark #15309: vectorization support: normalized vectorization overhead 3.250
+   remark #15300: LOOP WAS VECTORIZED
+   remark #15442: entire loop may be executed in remainder
+   remark #15450: unmasked unaligned unit stride loads: 1 
+   remark #15451: unmasked unaligned unit stride stores: 1 
+   remark #15475: --- begin vector cost summary ---
+   remark #15476: scalar cost: 5 
+   remark #15477: vector cost: 0.500 
+   remark #15478: estimated potential speedup: 6.910 
+   remark #15488: --- end vector cost summary ---
+LOOP END
+
+LOOP BEGIN at anal.c_fill_frame_line174_loop.c(70,5)
+<Remainder loop for vectorization>
+LOOP END
+===========================================================================
